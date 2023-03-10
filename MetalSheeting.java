@@ -4,20 +4,23 @@ import java.util.ArrayList;
 
 class MetalSheeting {
     public static void main(String[] args) {
-        // makes the 2d array we'll use to hold all pieces [width,length]
+        // makes the lists of all bins we'll need
+        
+        // all newly input metal > all finalised metal
         ArrayList<Metal> metalList = new ArrayList<Metal>();
+
+        // list of all bins we'll need
         ArrayList<Bin> binList = new ArrayList<Bin>();
-        ArrayList<Bin> binFinalList = new ArrayList<Bin>();
-        Bin binEmpty = new Bin();
-        binList.add(binEmpty);
-        binFinalList.add(binEmpty);
+
+        Bin startingBin = new Bin();
+        binList.add(startingBin);
 
         // takes inputs for our metal
         metalInput(metalList);
 
         //sort metal by area DES
         for(int i = 0; i < metalList.size() - 1; i++) {
-            if(metalList.get(i).getArea() < metalList.get(i+1).getArea()) {
+            if(metalList.get(i).area < metalList.get(i+1).area) {
                 Metal temp = metalList.get(i);
                 metalList.set(i, metalList.get(i+1));
                 metalList.set(i+1, temp);
@@ -25,50 +28,87 @@ class MetalSheeting {
             }
         }
 
+        // this is where the fun begins
+        // MAXRECTS-BSSF-GLOBAL-BBF
+        // (loop over everything at every instance and score the best of everything)
+
+        // iterate over every metal piece, no man left behind
+        for (int metal = 0; metal < metalList.size(); metal++) {
+            int bestMetal = null;
+            int bestBin = null;
+            for (int bin = 0; bin < binList; bin++) {
+
+            }
+
+        }
+
+
 //        y height                     (Bin)
 //        ┌───────────────────────────┐
 //        │                    (Rect) │
 //        │                           │
-//        ├───────────┐               │
-//        │   (Metal) │               │
-//        │           │               │
-//        │           │               │
-//        └───────────┴───────────────┘ x width
+//        ├─────────────┐             │
+//        │     (Metal) │             │
+//        │             │             │
+//        │             │             │
+//        └─────────────┴─────────────┘ x width
 //    (0,0)
 
-        // this is where the fun begins
-        for(int bin = 0; bin < binList.size(); bin++) {
-            for(int i = 0; i < metalList.size(); i++) {
-                // locate our current working piece
-                Metal metal = metalList.get(i);
+        //     for(int binIndex = 0; binIndex < binList.size(); binIndex++) {
+        //         for(int i = 0; i < metalList.size(); i++) {
+        //             // locate our current working piece
+        //             Metal metal = metalList.get(i);
 
-                // setup for rectangle scoring
-                float scoreArea = 9999;
-                boolean rotate = false;
-                int bestRect = 0;
-                float bestArea = 0;
+        //             // setup for rectangle scoring
+        //             boolean rotate = false;
+        //             Rect bestRect = null;
+        //             float bestArea = 0;
 
-                // iterate over all free rectangles to find optimal rectangle
-                for(int ii = 0; ii < binList.get(bin).freeRect.size(); ii++) {
-                    Rect rect = binList.get(bin).getRect(ii);
-                    float areaDiff = rect.area - metal.area;
-                    if(metal.width <= rect.width || metal.height <= rect.width) {
-                        if(###########################################################)
-                        } else if(areaDiff >= 0 && areaDiff < scoreArea) {
-                            scoreArea = areaDiff;
-                            bestRect = ii;
-                        } 
-                    } else continue;
-                }
-                // find best rotation that fits
+        //             // iterate over all free rectangles to find optimal rectangle
+        //             for(int rectIndex = 0; rectIndex < binList.get(binIndex).freeRect.size(); rectIndex++) {
+        //                 // make rectangle object
+        //                 Rect rect = binList.get(binIndex).getRect(rectIndex);
+        //                 // calculate area difference
+        //                 float areaDiff = rect.area - metal.area;
+        //                 // check that at least one side of the metal fits in the free rectangle
+        //                 if(metal.width <= rect.width || metal.height <= rect.width) {
+        //                     // check metal fits in rectangle
+        //                     if(areaDiff >= 0) {
+        //                         // check that this rectangle doesnt share the same area as the current best option
+        //                         // otherwise use the best short side fit to select the better option
+        //                         if(bestArea == rect.area) {
+        //                             Rect BSSFCheck = BSSF(metal, bestRect, rect);
+        //                             bestRect = BSSFCheck;
+        //                             bestArea = BSSFCheck.area;
+        //                         } else if(rect.area < bestArea) {
+        //                             bestRect = rect;
+        //                             bestArea = rect.area;
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //             // check there is a suitable rectangle to use
+        //             if(bestRect != null) {
+        //                 // find best rotation that fits
+        //                 if(bestRect.width - metal.width < 0) {
+        //                     float temp = metal.width;
+        //                     metal.width = metal.height;
+        //                     metal.height = temp;
+        //                 }
 
-            }
-        }
-    }
+        //             } else {
+        //                 nextBinList.add(metal);
+        //             }
+        //         }
+        //         // move all unused metal into the metal list and iterate to next bin
+        //         metalList = nextBinList;
+        //         nextBinList = null;
+        //     }
+        // }
 
-    // Best Short Side Fit algorithm if needed
-    static Rect BSSF(Metal metal, Rect rect1, Rect rect2) {
-        Rect returned;
+    // Best Short Side Fit algorithm for tied rectangles rect1, rect2
+    static Rect BSSFC(Metal metal, Rect rect1, Rect rect2) {
+        Rect returned = null;
 
         float diff1w = rect1.width-metal.width;
         float diff1h = rect1.height-metal.height;
@@ -77,14 +117,14 @@ class MetalSheeting {
         float diff2h = rect2.height-metal.height;
         
         float diff1 = Math.min(diff1w, diff1h);
-        float diff2 = math.min(diff2w, diff2h);
+        float diff2 = Math.min(diff2w, diff2h);
 
-        if(diff1 = diff2) {
-            returned = null;
-        } else if(Math.min(diff1, diff2) = diff1) {
-            returned = rect1;
-        } else {
-            returned = rect2;
+        if(diff1 != diff2) {
+            if(Math.min(diff1, diff2) == diff1) {
+                returned = rect1;
+            } else {
+                returned = rect2;
+            }
         }
         return returned;
     }
@@ -131,16 +171,16 @@ class Bin {
         freeRect.add(rect);
     }
 
-    void AddMetal(Metal inMetal) {
-        sorted.add(inMetal);
-    }
-
     void SubRect(int index) {
         freeRect.remove(index);
     }
 
     ArrayList<Rect> getFreeRect() {
         return freeRect;
+    }
+    
+    void AddSorted(Metal inMetal) {
+        sorted.add(inMetal);
     }
 
     ArrayList<Metal> GetSorted() {
@@ -168,10 +208,6 @@ class Rect {
         yCoord = inY;
         area = inWidth*inHeight;
     }
-
-    int getArea() {
-        return Math.round(area*100);
-    }
 }
 
 // This is all the metal pieces required for jobs to be pressed
@@ -180,7 +216,7 @@ class Metal {
     float width, height, xCoord, yCoord, area;
 
     Metal(float inWidth, float inHeight) {
-        // sort all dimensions to longest length
+        // sort all dimensions to make width longest length
         if (inHeight > inWidth) {
             width = inHeight;
             height = inWidth;
@@ -189,11 +225,6 @@ class Metal {
             height = inHeight;
         }
         area = inWidth*inHeight;
-    }
-
-    // return int area*100
-    int getArea() {
-        return Math.round(area*100);
     }
 }
 
