@@ -5,7 +5,7 @@ import java.util.ArrayList;
 class MetalSheeting {
     public static void main(String[] args) {
         // makes the lists of all bins we'll need
-        
+
         // all newly input metal > all finalised metal
         ArrayList<Metal> metalList = new ArrayList<Metal>();
 
@@ -36,10 +36,16 @@ class MetalSheeting {
         for (int metal = 0; metal < metalList.size(); metal++) {
             int bestMetal = null;
             int bestBin = null;
-            for (int bin = 0; bin < binList; bin++) {
 
+            // iterate over every bin, allowing to grow as binList grows
+            for (int bin = 0; bin < binList.size(); bin++) {
+                int bestRect = null;
+
+                // iterate over every rect, allowing to grow as rectList grows
+                for (int rect = 0; rect < binList.get(bin).getRectList().size(); rect++) {
+
+                }
             }
-
         }
 
 
@@ -65,7 +71,7 @@ class MetalSheeting {
         //             float bestArea = 0;
 
         //             // iterate over all free rectangles to find optimal rectangle
-        //             for(int rectIndex = 0; rectIndex < binList.get(binIndex).freeRect.size(); rectIndex++) {
+        //             for(int rectIndex = 0; rectIndex < binList.get(binIndex).rectList.size(); rectIndex++) {
         //                 // make rectangle object
         //                 Rect rect = binList.get(binIndex).getRect(rectIndex);
         //                 // calculate area difference
@@ -112,10 +118,10 @@ class MetalSheeting {
 
         float diff1w = rect1.width-metal.width;
         float diff1h = rect1.height-metal.height;
-        
+
         float diff2w = rect2.width-metal.width;
         float diff2h = rect2.height-metal.height;
-        
+
         float diff1 = Math.min(diff1w, diff1h);
         float diff2 = Math.min(diff2w, diff2h);
 
@@ -158,27 +164,27 @@ class MetalSheeting {
 class Bin {
     static int width = 97;
     static int height = 49;
-    ArrayList<Rect> freeRect = new ArrayList<Rect>();
+    ArrayList<Rect> rectList = new ArrayList<Rect>();
     ArrayList<Metal> sorted = new ArrayList<Metal>();
 
     Bin() {
         Rect rect = new Rect(width, height, 0, 0);
-        freeRect.add(rect);
+        rectList.add(rect);
     }
 
     void AddRect(float inWidth, float inHeight, float inX, float inY) {
         Rect rect = new Rect(inWidth, inHeight, inX, inY);
-        freeRect.add(rect);
+        rectList.add(rect);
     }
 
     void SubRect(int index) {
-        freeRect.remove(index);
+        rectList.remove(index);
     }
 
-    ArrayList<Rect> getFreeRect() {
-        return freeRect;
+    ArrayList<Rect> getRectList() {
+        return rectList;
     }
-    
+
     void AddSorted(Metal inMetal) {
         sorted.add(inMetal);
     }
@@ -188,7 +194,7 @@ class Bin {
     }
 
     Rect getRect(int index) {
-        return freeRect.get(index);
+        return rectList.get(index);
     }
 
     Metal GetMetal(int index) {
@@ -225,6 +231,12 @@ class Metal {
             height = inHeight;
         }
         area = inWidth*inHeight;
+    }
+
+    void Rotate() {
+        tempWidth = width;
+        width = height;
+        height = tempWidth;
     }
 }
 
