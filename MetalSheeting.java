@@ -34,20 +34,23 @@ class MetalSheeting {
 
         // iterate over every metal piece, no man left behind
         for (int metal = 0; metal < metalList.size(); metal++) {
-            int bestMetal = null;
-            int bestBin = null;
+            int bestMetal = 0;
+            int bestBin = 0;
 
             // iterate over every bin, allowing to grow as binList grows
             for (int bin = 0; bin < binList.size(); bin++) {
-                int bestRect = null;
+                int bestRect = 0;
 
                 // iterate over every rect, allowing to grow as rectList grows
                 for (int rect = 0; rect < binList.get(bin).getRectList().size(); rect++) {
 
                 }
             }
-        }
 
+            binList.get(bestBin).sorted.add(metalList.get(bestMetal));
+            metalList.remove(bestMetal);
+        }
+    }
 
 //        y height                     (Bin)
 //        ┌───────────────────────────┐
@@ -59,58 +62,6 @@ class MetalSheeting {
 //        │             │             │
 //        └─────────────┴─────────────┘ x width
 //    (0,0)
-
-        //     for(int binIndex = 0; binIndex < binList.size(); binIndex++) {
-        //         for(int i = 0; i < metalList.size(); i++) {
-        //             // locate our current working piece
-        //             Metal metal = metalList.get(i);
-
-        //             // setup for rectangle scoring
-        //             boolean rotate = false;
-        //             Rect bestRect = null;
-        //             float bestArea = 0;
-
-        //             // iterate over all free rectangles to find optimal rectangle
-        //             for(int rectIndex = 0; rectIndex < binList.get(binIndex).rectList.size(); rectIndex++) {
-        //                 // make rectangle object
-        //                 Rect rect = binList.get(binIndex).getRect(rectIndex);
-        //                 // calculate area difference
-        //                 float areaDiff = rect.area - metal.area;
-        //                 // check that at least one side of the metal fits in the free rectangle
-        //                 if(metal.width <= rect.width || metal.height <= rect.width) {
-        //                     // check metal fits in rectangle
-        //                     if(areaDiff >= 0) {
-        //                         // check that this rectangle doesnt share the same area as the current best option
-        //                         // otherwise use the best short side fit to select the better option
-        //                         if(bestArea == rect.area) {
-        //                             Rect BSSFCheck = BSSF(metal, bestRect, rect);
-        //                             bestRect = BSSFCheck;
-        //                             bestArea = BSSFCheck.area;
-        //                         } else if(rect.area < bestArea) {
-        //                             bestRect = rect;
-        //                             bestArea = rect.area;
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //             // check there is a suitable rectangle to use
-        //             if(bestRect != null) {
-        //                 // find best rotation that fits
-        //                 if(bestRect.width - metal.width < 0) {
-        //                     float temp = metal.width;
-        //                     metal.width = metal.height;
-        //                     metal.height = temp;
-        //                 }
-
-        //             } else {
-        //                 nextBinList.add(metal);
-        //             }
-        //         }
-        //         // move all unused metal into the metal list and iterate to next bin
-        //         metalList = nextBinList;
-        //         nextBinList = null;
-        //     }
-        // }
 
     // Best Short Side Fit algorithm for tied rectangles rect1, rect2
     static Rect BSSFC(Metal metal, Rect rect1, Rect rect2) {
@@ -156,87 +107,6 @@ class MetalSheeting {
                 metalList.add(metal);
             }
         }
-    }
-}
-
-// This is the big metal sheets that must be cut up
-// internal sheets make up the spaces available to be used on the sheet
-class Bin {
-    static int width = 97;
-    static int height = 49;
-    ArrayList<Rect> rectList = new ArrayList<Rect>();
-    ArrayList<Metal> sorted = new ArrayList<Metal>();
-
-    Bin() {
-        Rect rect = new Rect(width, height, 0, 0);
-        rectList.add(rect);
-    }
-
-    void AddRect(float inWidth, float inHeight, float inX, float inY) {
-        Rect rect = new Rect(inWidth, inHeight, inX, inY);
-        rectList.add(rect);
-    }
-
-    void SubRect(int index) {
-        rectList.remove(index);
-    }
-
-    ArrayList<Rect> getRectList() {
-        return rectList;
-    }
-
-    void AddSorted(Metal inMetal) {
-        sorted.add(inMetal);
-    }
-
-    ArrayList<Metal> GetSorted() {
-        return sorted;
-    }
-
-    Rect getRect(int index) {
-        return rectList.get(index);
-    }
-
-    Metal GetMetal(int index) {
-        return sorted.get(index);
-    }
-}
-
-// an object to represent the free space created after each piece of metal is
-// placed into a bin
-class Rect {
-    float width, height, xCoord, yCoord, area;
-
-    Rect(float inWidth, float inHeight, float inX, float inY) {
-        width = inWidth;
-        height = inHeight;
-        xCoord = inX;
-        yCoord = inY;
-        area = inWidth*inHeight;
-    }
-}
-
-// This is all the metal pieces required for jobs to be pressed
-// each one has width and height dimensions, and x,y points for top left coord
-class Metal {
-    float width, height, xCoord, yCoord, area;
-
-    Metal(float inWidth, float inHeight) {
-        // sort all dimensions to make width longest length
-        if (inHeight > inWidth) {
-            width = inHeight;
-            height = inWidth;
-        } else {
-            width = inWidth;
-            height = inHeight;
-        }
-        area = inWidth*inHeight;
-    }
-
-    void Rotate() {
-        tempWidth = width;
-        width = height;
-        height = tempWidth;
     }
 }
 
